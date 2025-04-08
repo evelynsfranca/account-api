@@ -24,14 +24,14 @@ public class AccountApplicationService {
         return accountService.getAll();
     }
 
-    public Account getAccount(String accountId) {
+    public Double getAccountBalance(String accountId) {
         Account account = accountService.getAccount(accountId);
 
         if (account == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "0"); 
         }
 
-        return account;
+        return account.getBalance();
     }
     
     public Account updateAccount(Account account, Event event) {
