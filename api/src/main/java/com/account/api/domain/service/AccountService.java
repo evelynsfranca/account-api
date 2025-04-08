@@ -4,11 +4,13 @@ import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.account.api.domain.enumeration.EventType;
 import com.account.api.domain.model.Account;
 import com.account.api.domain.model.Event;
+import com.account.api.exception.BusinessException;
 import com.account.api.repository.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,16 +27,21 @@ public class AccountService {
     }
 
     public Account getAccount(String accountId) {
-        return accountRepository.findById(accountId);
+        Account account = accountRepository.findById(accountId);
+
+        if (account == null) {
+            throw new BusinessException(HttpStatus.NOT_FOUND, "0");
+        }
+
+        return account;
     }
 
     public Account updateAccount(Account account, Event event) {
 
-        Double originValue = 
-            (event.getType().equals(EventType.transfer) || event.getType().equals(EventType.withdraw))
+        Double originValue = (event.getType().equals(EventType.transfer) || event.getType().equals(EventType.withdraw))
                 && event.getOrigin().getId().equals(account.getId())
-                    ? event.getAmount() * (-1)
-                    : event.getAmount();
+                        ? event.getAmount() * (-1)
+                        : event.getAmount();
 
         Double newBalance = account.getBalance() + originValue;
         account.setBalance(newBalance);
@@ -47,8 +54,7 @@ public class AccountService {
         Account account = new Account();
         Random rand = new Random();
 
-        String id = 
-            event.getDestination() == null 
+        String id = event.getDestination() == null
                 ? String.valueOf(rand.nextInt(999))
                 : event.getDestination().getId();
 
@@ -63,4 +69,4 @@ public class AccountService {
     public void reset() {
         accountRepository.reset();
     }
-}   
+}
