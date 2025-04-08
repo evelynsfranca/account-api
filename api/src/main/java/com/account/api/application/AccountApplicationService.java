@@ -5,11 +5,11 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.account.api.domain.model.Account;
 import com.account.api.domain.model.Event;
 import com.account.api.domain.service.AccountService;
+import com.account.api.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +28,7 @@ public class AccountApplicationService {
         Account account = accountService.getAccount(accountId);
 
         if (account == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "0"); 
+            throw new BusinessException(HttpStatus.NOT_FOUND, "0"); 
         }
 
         return account.getBalance();
