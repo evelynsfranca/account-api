@@ -5,11 +5,11 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.account.api.domain.enumeration.EventType;
 import com.account.api.domain.model.Account;
 import com.account.api.domain.model.Event;
+import com.account.api.exception.BusinessException;
 import com.account.api.repository.EventRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -50,28 +50,18 @@ public class EventService {
     }
 
     private void validate(Event event) {        
-        if (event.getType().equals(EventType.withdraw)) {
-
-            if (event.getOrigin() == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "A conta deve ser informada."); 
+        if (event.getType().equals(EventType.withdraw)
+            && event.getOrigin() == null
+        ) {
+                throw new BusinessException(HttpStatus.NOT_FOUND, "0"); 
             }
-        }
         
-        if (event.getType().equals(EventType.transfer)) {
-
-            if (event.getDestination() == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "A conta de destino deve ser informada."); 
+        if (event.getType().equals(EventType.transfer)
+                && (event.getDestination() == null
+                    || event.getOrigin() == null)
+            ) {
+                throw new BusinessException(HttpStatus.NOT_FOUND, "0"); 
             }
-            
-            if (event.getOrigin() == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "A conta deve ser informada."); 
-            }
-
-            if (event.getOrigin().getBalance() < event.getAmount()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Saldo insuficiente.");
-
-            }
-        }
     }
     
     public void reset() {
