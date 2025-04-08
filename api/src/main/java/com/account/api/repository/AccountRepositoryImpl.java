@@ -11,10 +11,11 @@ import com.account.api.domain.model.Account;
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
 
+    private Account account = new Account("300", 0.0, new ArrayList<>());
     private Set<Account> accounts = new HashSet<>();
 
     public AccountRepositoryImpl() {
-        accounts.add(new Account("300", 0.0, new ArrayList<>()));
+        accounts.add(account);
     }
 
     @Override
@@ -37,6 +38,6 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void reset() {
-        accounts = new HashSet<>();
+        accounts = new HashSet<>(Set.of(this.account));
     }
 }

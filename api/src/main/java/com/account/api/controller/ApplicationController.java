@@ -25,6 +25,6 @@ public class ApplicationController {
         accountApplicationService.reset();
         eventApplicationService.reset();
 
-        return new ResponseEntity<String>(HttpStatus.OK);
+        return new ResponseEntity<String>("OK", HttpStatus.OK);
     }
 }

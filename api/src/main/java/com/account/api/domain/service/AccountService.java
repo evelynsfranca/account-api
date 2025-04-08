@@ -36,6 +36,10 @@ public class AccountService {
         return account;
     }
 
+    public Account findById(String accountId) {
+        return accountRepository.findById(accountId);
+    }
+
     public Account updateAccount(Account account, Event event) {
 
         Double originValue = (event.getType().equals(EventType.transfer) || event.getType().equals(EventType.withdraw))

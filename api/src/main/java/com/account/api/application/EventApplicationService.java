@@ -30,8 +30,8 @@ public class EventApplicationService {
     public EventToResponseDTO create(EventToCreateDTO dto) {
 
         Event event = eventMapper.toEntityEvent(dto);
-        Account origin = accountService.getAccount(event.getOrigin().getId());
-        Account destination = accountService.getAccount(event.getDestination().getId());
+        Account origin = accountService.findById(event.getOrigin().getId());
+        Account destination = accountService.findById(event.getDestination().getId());
 
         if (event.getType().equals(EventType.deposit) && destination == null) {
             destination = accountService.createAccountFromEvent(event);

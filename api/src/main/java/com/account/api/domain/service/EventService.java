@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.account.api.domain.enumeration.EventType;
 import com.account.api.domain.model.Account;
 import com.account.api.domain.model.Event;
 import com.account.api.exception.BusinessException;
@@ -17,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class EventService {
-    
+
     @Autowired
     private EventRepository eventRepository;
-    
+
     @Autowired
     private AccountService accountService;
 
@@ -37,33 +36,41 @@ public class EventService {
         event.setId(uuidAsString);
 
         if (origin != null) {
-            accountService.updateAccount(origin, event);            
-        } 
+            accountService.updateAccount(origin, event);
+        }
 
-        if (destination != null) {    
-            accountService.updateAccount(destination, event); 
-        } 
+        if (destination != null) {
+            accountService.updateAccount(destination, event);
+        }
 
         eventRepository.save(event);
 
         return event;
     }
 
-    private void validate(Event event) {        
-        if (event.getType().equals(EventType.withdraw)
-            && event.getOrigin() == null
-        ) {
-                throw new BusinessException(HttpStatus.NOT_FOUND, "0"); 
+    private void validate(Event event) {
+
+        if (event.getType() != null) {
+
+            switch (event.getType()) {
+                case withdraw -> {
+                    if (event.getOrigin() == null) {
+                        throw new BusinessException(HttpStatus.NOT_FOUND, "0");
+                    }
+                }
+
+                case transfer -> {
+                    if (event.getOrigin() == null || event.getDestination() == null) {
+                        throw new BusinessException(HttpStatus.NOT_FOUND, "0");
+                    }
+                }
+
+                default -> {}
             }
-        
-        if (event.getType().equals(EventType.transfer)
-                && (event.getDestination() == null
-                    || event.getOrigin() == null)
-            ) {
-                throw new BusinessException(HttpStatus.NOT_FOUND, "0"); 
-            }
+
+        }
     }
-    
+
     public void reset() {
         eventRepository.reset();
     }
