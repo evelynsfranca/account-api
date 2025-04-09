@@ -8,7 +8,7 @@ public interface AccountRepository {
 
     Account findById(String id);
 
-    void save(Account account);
+    Account save(Account account);
 
     Set<Account> findAll();
 

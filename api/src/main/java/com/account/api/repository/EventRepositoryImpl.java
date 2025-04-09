@@ -15,8 +15,9 @@ public class EventRepositoryImpl implements EventRepository {
     public EventRepositoryImpl() { }
     
     @Override
-    public void save(Event event) {
+    public Event save(Event event) {
         events.add(event);
+        return event;
     }
 
     @Override

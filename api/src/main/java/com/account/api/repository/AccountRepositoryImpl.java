@@ -27,8 +27,9 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void save(Account account) {
+    public Account save(Account account) {
         accounts.add(account);
+        return account;
     }
 
     @Override
@@ -38,6 +39,8 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void reset() {
-        accounts = new HashSet<>(Set.of(this.account));
+        this.accounts.clear();        
+        Account defaultAccount = new Account("300", 0.0, new ArrayList<>());
+        accounts = new HashSet<>(Set.of(defaultAccount));
     }
 }

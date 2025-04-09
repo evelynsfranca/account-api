@@ -43,9 +43,9 @@ public class EventService {
             accountService.updateAccount(destination, event);
         }
 
-        eventRepository.save(event);
+        Event entity = eventRepository.save(event);
 
-        return event;
+        return entity;
     }
 
     private void validate(Event event) {

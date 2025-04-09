@@ -65,9 +65,9 @@ public class AccountService {
         account.setId(id);
         account.setBalance(0.0);
 
-        accountRepository.save(account);
+        Account entity = accountRepository.save(account);
 
-        return account;
+        return entity;
     }
 
     public void reset() {
